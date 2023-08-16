@@ -16,7 +16,7 @@ def main():
         print('Invalid page number')
         sys.exit()
 
-    author_name = (' ').join(author_code.split('.')[1].split('_'))
+    author_name = author_code.split('.')[1]
 
     for page_num in range(num_pages):
         url = f'https://www.goodreads.com/author/quotes/{author_code}?page={page_num + 1}'

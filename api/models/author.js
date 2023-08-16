@@ -5,16 +5,17 @@ const authorSchema = new mongoose.Schema({
   quotes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Quote',
-      default: []
-    }
-  ]
+      ref: "Quote",
+      default: [],
+    },
+  ],
 });
 
 authorSchema.set("toJSON", {
   transform: (document, object) => {
-    object.id = object._id.toString()
-    delete object._id
+    object.id = object._id.toString();
+    object.name = object.name.split("_").join(" ");
+    delete object._id;
     delete object.__v;
   },
 });
