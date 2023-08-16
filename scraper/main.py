@@ -8,12 +8,14 @@ def main():
         print('Enter author code (e.g. 1938.Friedrich_Nietzsche) as first argument and number of pages as second argument')
         sys.exit()
     
-    if not isinstance(sys.argv[2], int):
+
+    author_code = sys.argv[1]
+    try: 
+        num_pages = int(sys.argv[2])
+    except ValueError:
         print('Invalid page number')
         sys.exit()
 
-    author_code = sys.argv[1]
-    num_pages = sys.argv[2]
     author_name = (' ').join(author_code.split('.')[1].split('_'))
 
     for page_num in range(num_pages):
@@ -34,7 +36,7 @@ def main():
             quote = full_quote_text.split("\n")[1].strip()[1:-1]
             quote_data = {"content": quote, "authorName": author_name}
             try:
-                requests.post("http://localhost:3000/quotes", data=quote_data)
+                requests.post("http://localhost:3000/quotes", json=quote_data)
                 print(quote)
             except Exception as err:
                 print('Error sending quote to server:', err)
