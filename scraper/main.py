@@ -32,9 +32,10 @@ def main():
         for quote_elem in quote_elems:
             full_quote_text = quote_elem.get_text()
             quote = full_quote_text.split("\n")[1].strip()[1:-1]
-            quote_data = {"content": quote, "author": author_name}
+            quote_data = {"content": quote, "authorName": author_name}
             try:
                 requests.post("http://localhost:3000/quotes", data=quote_data)
+                print(quote)
             except Exception as err:
                 print('Error sending quote to server:', err)
 

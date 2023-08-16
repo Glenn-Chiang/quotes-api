@@ -1,22 +1,22 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const quoteSchema = new mongoose.Schema({
-  content: String,
+  content: { type: String, required: true },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Author"
-  }
-})
+    ref: "Author",
+    required: true
+  },
+});
 
-quoteSchema.set('toJSON', {
+quoteSchema.set("toJSON", {
   transform: (document, object) => {
-    object.id = object._id.toString()
-    delete object._id
-    delete object.__v
-  }
-})
+    object.id = object._id.toString();
+    delete object._id;
+    delete object.__v;
+  },
+});
 
-const Quote = mongoose.model('Quote', quoteSchema)
+const Quote = mongoose.model("Quote", quoteSchema);
 
-module.exports = Quote
-
+module.exports = Quote;
