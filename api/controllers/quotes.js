@@ -12,15 +12,16 @@ quotesRouter.get("/authors/:authorId/randomquote", (req, res) => {});
 quotesRouter.post("/quotes", async (req, res) => {
   const { content, authorName } = req.body;
 
-  const author = await Author.findOne({ name: authorName });
-  if (!author) {
-    // Add author to db if they do not already exist
-    const newAuthor = new Author({ name: authorName });
-    await newAuthor.save();
-  }
-
+  const author =
+    (await Author.findOne({ name: authorName })) ||
+    new Author({ name: authorName }); // Add author to db if they do not already exist
   const quote = new Quote({ content, author: author._id });
   await quote.save();
+
+  // Add quote to author's quotes field
+  author.quotes.push(quote);
+  await author.save();
+
   res.json(quote);
 });
 
