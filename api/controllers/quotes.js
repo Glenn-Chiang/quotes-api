@@ -9,7 +9,10 @@ quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
   if (!author) {
     return res.status(404).json({ error: "Author not found" });
   }
-  const quotes = await Quote.find({ author: author._id }).populate('author', 'name');
+  const quotes = await Quote.find({ author: author._id }).populate(
+    "author",
+    "name"
+  );
   res.json(quotes);
 });
 
@@ -20,6 +23,13 @@ quotesRouter.get("/authors/:authorName/randomquote", async (req, res) => {
   if (!author) {
     return res.status(404).json({ error: "Author not found" });
   }
+  const quoteSample = await Quote.aggregate([
+    { $match: { author: author._id } },
+    { $sample: { size: 1 } },
+  ]);
+  let quote = quoteSample[0];
+  quote = await Quote.populate(quote, { path: "author", select: "name" });
+  res.json(quote);
 });
 
 // Add new quote
