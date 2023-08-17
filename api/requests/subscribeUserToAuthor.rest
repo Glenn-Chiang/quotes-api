@@ -3,5 +3,5 @@ Content-Type: application/json
 
 {
     "name": "test",
-    "chat_id": "123"
+    "chat_id": 123
 }

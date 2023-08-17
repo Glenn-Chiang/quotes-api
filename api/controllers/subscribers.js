@@ -4,6 +4,7 @@ const Subscriber = require("../models/subscriber");
 
 // Add new subscriber for specified author
 subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
+  console.log(req.body);
   const { name, chat_id: chatId } = req.body;
   // If subscriber does not already exist, add them to collection
   const subscriber =
@@ -13,17 +14,16 @@ subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
       chatId: chatId,
     });
 
-  // Add subscriber to author's subscriber field
-  const author = await Author.findOneAndUpdate(
-    { name: req.params.authorName },
-    {
-      $push: { subscribers: subscriber._id },
-    }
-  );
+  const author = await Author.findOne({ name: req.params.authorName });
 
+  // If user already subscribed to author, abort request
   if (author.subscribers.includes(subscriber._id)) {
     return res.status(409).json({ error: "Already subscribed to author" });
   }
+
+  // Add subscriber to author's subscribers field
+  author.subscribers.push(subscriber._id);
+  author.save();
 
   // Add author to subscriber's subscribedTo field
   subscriber.subscribedTo.push(author._id);
