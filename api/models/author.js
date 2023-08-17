@@ -9,6 +9,13 @@ const authorSchema = new mongoose.Schema({
       default: [],
     },
   ],
+  subscribers: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subscriber",
+      default: []
+    }
+  ]
 });
 
 authorSchema.set("toJSON", {
