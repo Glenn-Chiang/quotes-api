@@ -46,4 +46,24 @@ subscribersRouter.get("/authors/:authorName/subscribers", async (req, res) => {
   res.json(subscribers);
 });
 
+// Unsubscribe a subscriber from a specified author
+subscribersRouter.delete(
+  "/authors/:authorName/subscribers/:username",
+  async (req, res) => {
+    const subscriber = await Subscriber.findOne({
+      username: req.params.username,
+    });
+    const author = await Author.findOneAndUpdate(
+      { name: req.params.authorName },
+      {
+        $pull: { subscribers: subscriber._id },
+      }
+    );
+    await Subscriber.findByIdAndUpdate(subscriber._id, {
+      $pull: { subscribedTo: author._id },
+    });
+    res.status(204).end();
+  }
+);
+
 module.exports = subscribersRouter;
