@@ -2,7 +2,7 @@ const subscribersRouter = require("express").Router();
 const Author = require("../models/author");
 const Subscriber = require("../models/subscriber");
 
-// Add new subscriber for author
+// Add new subscriber for specified author
 subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
   const { name, chat_id: chatId } = req.body;
   // If subscriber does not already exist, add them to collection
@@ -24,6 +24,20 @@ subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
   // Add author to subscriber's subscribedTo field
   subscriber.subscribedTo.push(author._id);
   subscriber.save();
+});
+
+// Get all subscribers of specified author
+subscribersRouter.get("/authors/:authorName/subscribers", async (req, res) => {
+  const author = await Author.findOne({ name: req.params.authorName }).populate(
+    "subscribers",
+    "chatId"
+  );
+
+  if (!author) {
+    return res.status(404).json({ error: "Author not found" });
+  }
+  const subscribers = author.subscribers;
+  res.json(subscribers);
 });
 
 module.exports = subscribersRouter;
