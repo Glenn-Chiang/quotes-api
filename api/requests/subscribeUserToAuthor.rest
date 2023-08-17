@@ -1,0 +1,7 @@
+POST http://localhost:3000/authors/Friedrich_Nietzsche/subscribers
+Content-Type: application/json
+
+{
+    "name": "test",
+    "chat_id": "123"
+}

@@ -9,8 +9,8 @@ subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
   const subscriber =
     (await Subscriber.findOne({ chatId })) ||
     new Subscriber({
-      name,
-      chatId,
+      username: name,
+      chatId: chatId,
     });
 
   // Add subscriber to author's subscriber field
@@ -21,9 +21,15 @@ subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
     }
   );
 
+  if (author.subscribers.includes(subscriber._id)) {
+    return res.status(409).json({ error: "Already subscribed to author" });
+  }
+
   // Add author to subscriber's subscribedTo field
   subscriber.subscribedTo.push(author._id);
   subscriber.save();
+
+  res.json(subscriber);
 });
 
 // Get all subscribers of specified author
