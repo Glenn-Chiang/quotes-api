@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const subscriberSchema = new mongoose.Schema({
   username: { type: String, required: true },
-  chat_id: { type: String, required: true },
+  chatId: { type: String, required: true },
   subscribedTo: [
     {
       type: mongoose.Schema.Types.ObjectId,
