@@ -5,13 +5,13 @@ const Subscriber = require("../models/subscriber");
 // Add new subscriber for specified author
 subscribersRouter.post("/authors/:authorName/subscribers", async (req, res) => {
   console.log(req.body);
-  const { name, chat_id: chatId } = req.body;
+  const { username, chat_id: chatId } = req.body;
   // If subscriber does not already exist, add them to collection
   const subscriber =
     (await Subscriber.findOne({ chatId })) ||
     new Subscriber({
-      username: name,
-      chatId: chatId,
+      username,
+      chatId
     });
 
   const author = await Author.findOne({ name: req.params.authorName });
