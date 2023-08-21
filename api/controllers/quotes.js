@@ -2,6 +2,13 @@ const quotesRouter = require("express").Router();
 const Quote = require("../models/quote");
 const Author = require("../models/author");
 
+// Get random quote from random author
+quotesRouter.get("/quotes/random", async (req, res) => {
+  const quote  = (await Quote.aggregate([{ $sample: { size: 1 } }]))[0];
+  quote = await Quote.populate(quote, { path: "author", select: "name" });
+  res.json(quote)
+});
+
 // Get all quotes from author
 quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
   const authorName = req.params.authorName;
