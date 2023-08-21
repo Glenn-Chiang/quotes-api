@@ -4,7 +4,7 @@ const Author = require("../models/author");
 
 // Get random quote from random author
 quotesRouter.get("/quotes/random", async (req, res) => {
-  const quote  = (await Quote.aggregate([{ $sample: { size: 1 } }]))[0];
+  let quote  = (await Quote.aggregate([{ $sample: { size: 1 } }]))[0];
   quote = await Quote.populate(quote, { path: "author", select: "name" });
   res.json(quote)
 });
