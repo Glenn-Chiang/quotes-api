@@ -8,13 +8,6 @@ const authorSchema = new mongoose.Schema({
       ref: "Quote",
       default: [],
     },
-  ],
-  subscribers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Subscriber",
-      default: []
-    }
   ]
 });
 
