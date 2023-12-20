@@ -9,6 +9,13 @@ quotesRouter.get("/quotes/random", async (req, res) => {
   res.json(quote);
 });
 
+// Get a given number of random quotes from random author
+quotesRouter.get("/quotes", async (req, res) => {
+  const count = Number(req.query.count)
+  const quotes = await Quote.aggregate([{ $sample: { size: count } }]);
+  res.json(quotes)
+})
+
 // Get a given number of random quotes from author
 quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
   const authorName = req.params.authorName;
@@ -24,7 +31,7 @@ quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
         { $match: { author: author._id } },
         { $sample: { size: count } },
       ])
-    : await Quote.find({ author: author._id }).populate("author", "name");
+    : await Quote.find({ author: author._id });
   res.json(quotes);
 });
 
