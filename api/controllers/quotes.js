@@ -4,26 +4,31 @@ const Author = require("../models/author");
 
 // Get random quote from random author
 quotesRouter.get("/quotes/random", async (req, res) => {
-  let quote  = (await Quote.aggregate([{ $sample: { size: 1 } }]))[0];
+  let quote = (await Quote.aggregate([{ $sample: { size: 1 } }]))[0];
   quote = await Quote.populate(quote, { path: "author", select: "name" });
-  res.json(quote)
+  res.json(quote);
 });
 
-// Get all quotes from author
+// Get a given number of random quotes from author
 quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
   const authorName = req.params.authorName;
+  const count = Number(req.query.count);
+
   const author = await Author.findOne({ name: authorName });
   if (!author) {
     return res.status(404).json({ error: "Author not found" });
   }
-  const quotes = await Quote.find({ author: author._id }).populate(
-    "author",
-    "name"
-  );
+
+  const quotes = count
+    ? await Quote.aggregate([
+        { $match: { author: author._id } },
+        { $sample: { size: count } },
+      ])
+    : await Quote.find({ author: author._id }).populate("author", "name");
   res.json(quotes);
 });
 
-// Get random quote from author
+// Get a random quote from author
 quotesRouter.get("/authors/:authorName/random", async (req, res) => {
   const authorName = req.params.authorName;
   const author = await Author.findOne({ name: authorName });
