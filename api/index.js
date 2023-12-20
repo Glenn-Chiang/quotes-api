@@ -3,7 +3,6 @@ const cors = require("cors");
 require("dotenv").config();
 const quotesRouter = require("./controllers/quotes");
 const authorsRouter = require("./controllers/authors");
-const subscribersRouter = require("./controllers/subscribers");
 const mongoose = require("mongoose");
 
 async function connect_to_db() {
@@ -25,7 +24,6 @@ app.use(express.json());
 
 app.use(quotesRouter);
 app.use(authorsRouter);
-app.use(subscribersRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

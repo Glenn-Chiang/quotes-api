@@ -24,7 +24,7 @@ quotesRouter.get("/authors/:authorName/quotes", async (req, res) => {
 });
 
 // Get random quote from author
-quotesRouter.get("/authors/:authorName/randomquote", async (req, res) => {
+quotesRouter.get("/authors/:authorName/random", async (req, res) => {
   const authorName = req.params.authorName;
   const author = await Author.findOne({ name: authorName });
   if (!author) {
